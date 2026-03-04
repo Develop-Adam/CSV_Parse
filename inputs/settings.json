@@ -1,4 +1,3 @@
-/* Default Settings.  Change to match work order template */
 {
   "csv": {
     "delimiter": ",",
