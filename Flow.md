@@ -1,14 +1,10 @@
 # Program Flow
 
-```mermaid
-flowchart TD
-    A((Start)) --> B[STUFF]
-```
+## Each chart describes the logic of each python script
 
-## filter_work_orders_to_json.py
+### filter_work_orders_to_json.py
 
 ```mermaid
-
 flowchart TD
     A[Start] --> B[Parse CLI args<br/>--input, --output, --status, --not-status,<br/>--date-col, --date-from/to, --contains, --keep-cols, --limit]
     B --> C["Resolve input/output paths<br/>(absolute; relative to script if needed)"]
@@ -95,3 +91,4 @@ flowchart TD
     R --> S["[Print success; Exit 0]"]
 
 ```
+
