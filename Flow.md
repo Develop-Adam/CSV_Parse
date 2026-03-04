@@ -8,121 +8,77 @@
 
 ```mermaid
 flowchart TD
+    A([Start]) --> B[Parse command line arguments]
+    B --> C[Resolve file paths for input output and settings]
+    C --> D{Input CSV exists}
+    D -- No --> E[Print error and exit]
+    E --> Z([End])
+    D -- Yes --> F[Load settings JSON]
+    F --> G[Build CSV read options from settings]
+    G --> H[Read CSV into DataFrame]
+    H --> I[Clean whitespace and NBSP]
+    I --> J[Count rows in dataset]
+    J --> K{Status filter provided}
+    K -- Yes --> K1[Keep rows where Status matches]
+    K -- No --> L
+    K1 --> L
+    L --> M{Exclude status filter provided}
+    M -- Yes --> M1[Remove rows with that status]
+    M -- No --> N
+    M1 --> N
+    N --> O{Contains filters present}
+    O -- No --> P
+    O -- Yes --> O1[Loop through each contains rule]
+    O1 --> O2[Split rule into column and substring]
+    O2 --> O3{Column exists}
+    O3 -- No --> O4[Raise error]
+    O4 --> Z
+    O3 -- Yes --> O5[Filter rows where column contains substring]
+    O5 --> O6{More contains rules}
+    O6 -- Yes --> O1
+    O6 -- No --> P
+    P --> Q{Date filtering requested}
+    Q -- No --> R
+    Q -- Yes --> Q1{Date column exists}
+    Q1 -- No --> Q2[Warn and skip date filtering]
+    Q2 --> R
+    Q1 -- Yes --> Q3[Convert column to datetime]
+    Q3 --> Q4[Filter by start date if provided]
+    Q4 --> Q5[Filter by end date if provided]
+    Q5 --> R
+    R --> S{Nest question answer pairs}
+    S -- No --> T
+    S -- Yes --> S1[Loop through each row]
+    S1 --> S2[Loop through each column]
+    S2 --> S3{Column begins with Question}
+    S3 -- Yes --> S4[Find matching Answer and build QA object]
+    S3 -- No --> S5[Continue]
+    S4 --> S5
+    S5 --> S6{More columns}
+    S6 -- Yes --> S2
+    S6 -- No --> S7[Attach QA list to row]
+    S7 --> T
+    T --> U{Keep columns option provided}
+    U -- No --> V
+    U -- Yes --> U1[Validate requested columns]
+    U1 --> U2{Missing columns}
+    U2 -- Yes --> U3[Print error and exit]
+    U3 --> Z
+    U2 -- No --> V
+    V --> W{Limit rows}
+    W -- Yes --> W1[Keep first N rows]
+    W -- No --> X
+    W1 --> X
+    X --> Y[Print rows in and rows out]
+    Y --> AA[Create output folder]
+    AA --> AB{QA nesting enabled}
+    AB -- Yes --> AC[Loop through rows and convert to dictionaries]
+    AB -- No --> AD[Convert DataFrame to JSON records]
+    AC --> AE[Write JSON file]
+    AD --> AE
+    AE --> AF[Print success message]
+    AF --> Z([End])
 
-A([Start]) --> B[Parse command line arguments]
-
-B --> C[Resolve file paths for input output and settings]
-
-C --> D{Input CSV exists}
-
-D -- No --> E[Print error and exit]
-E --> Z([End])
-
-D -- Yes --> F[Load settings JSON]
-
-F --> G[Build CSV read options from settings]
-
-G --> H[Read CSV into DataFrame]
-
-H --> I[Clean whitespace and NBSP]
-
-I --> J[Count rows in dataset]
-
-J --> K{Status filter provided}
-
-K -- Yes --> K1[Keep rows where Status matches]
-K -- No --> L
-
-K1 --> L
-
-L --> M{Exclude status filter provided}
-
-M -- Yes --> M1[Remove rows with that status]
-M -- No --> N
-
-M1 --> N
-
-N --> O{Contains filters present}
-
-O -- No --> P
-
-O -- Yes --> O1[Loop through each contains rule]
-O1 --> O2[Split rule into column and substring]
-O2 --> O3{Column exists}
-
-O3 -- No --> O4[Raise error]
-O4 --> Z
-
-O3 -- Yes --> O5[Filter rows where column contains substring]
-O5 --> O6{More contains rules}
-
-O6 -- Yes --> O1
-O6 -- No --> P
-
-P --> Q{Date filtering requested}
-
-Q -- No --> R
-
-Q -- Yes --> Q1{Date column exists}
-
-Q1 -- No --> Q2[Warn and skip date filtering]
-Q2 --> R
-
-Q1 -- Yes --> Q3[Convert column to datetime]
-Q3 --> Q4[Filter by start date if provided]
-Q4 --> Q5[Filter by end date if provided]
-Q5 --> R
-
-R --> S{Nest question answer pairs}
-
-S -- No --> T
-
-S -- Yes --> S1[Loop through each row]
-S1 --> S2[Loop through each column]
-S2 --> S3{Column begins with Question}
-S3 -- Yes --> S4[Find matching Answer and build QA object]
-S3 -- No --> S5[Continue]
-S4 --> S5
-S5 --> S6{More columns}
-S6 -- Yes --> S2
-S6 -- No --> S7[Attach QA list to row]
-S7 --> T
-
-T --> U{Keep columns option provided}
-
-U -- No --> V
-
-U -- Yes --> U1[Validate requested columns]
-U1 --> U2{Missing columns}
-
-U2 -- Yes --> U3[Print error and exit]
-U3 --> Z
-
-U2 -- No --> V
-
-V --> W{Limit rows}
-
-W -- Yes --> W1[Keep first N rows]
-W -- No --> X
-
-W1 --> X
-
-X --> Y[Print rows in and rows out]
-
-Y --> AA[Create output folder]
-
-AA --> AB{QA nesting enabled}
-
-AB -- Yes --> AC[Loop through rows and convert to dictionaries]
-AB -- No --> AD[Convert DataFrame to JSON records]
-
-AC --> AE[Write JSON file]
-AD --> AE
-
-AE --> AF[Print success message]
-
-AF --> Z([End])
-```
 ```
 
 # score_from_json_auto.py
@@ -176,5 +132,6 @@ flowchart TD
     R --> S["[Print success; Exit 0]"]
 
 ```
+
 
 
