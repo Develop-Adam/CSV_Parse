@@ -5,18 +5,29 @@ import argparse
 import json
 import sys
 from pathlib import Path
-
 import pandas as pd
 
-NBSP = "\u00A0"
+#========================================================+=========================================#
+'''
+Constants
+'''
+NBSP = "\u00A0" # removes non-breaking spaces
 
 
+#========================================================+=========================================#
+'''
+    check if NaN -> convert to string -> replace NBSP characters ->
+    remove surrounding whitespace -> return cleaned string
+'''
 def clean_str(x):
-    if pd.isna(x):
+    if pd.isna(x): 
         return ""
     return str(x).replace(NBSP, " ").strip()
 
 
+#========================================================+=========================================#
+'''
+'''
 def load_settings(path: Path) -> dict:
     """
     Load settings JSON. If missing, return {}.
@@ -27,6 +38,9 @@ def load_settings(path: Path) -> dict:
         return json.load(f)
 
 
+#========================================================+=========================================#
+'''
+'''
 def get_csv_read_kwargs(settings: dict) -> dict:
     csvs = (settings or {}).get("csv", {})
     kwargs: dict = {}
@@ -56,6 +70,9 @@ def get_csv_read_kwargs(settings: dict) -> dict:
     return kwargs
 
 
+#========================================================+=========================================#
+'''
+'''
 def build_parser():
     p = argparse.ArgumentParser(description="Filter Work Orders CSV and export to JSON.")
 
@@ -103,6 +120,9 @@ def build_parser():
     return p
 
 
+#========================================================+=========================================#
+'''
+'''
 def apply_contains(df, rules):
     for rule in rules:
         if "::" not in rule:
@@ -123,6 +143,9 @@ def apply_contains(df, rules):
     return df
 
 
+#========================================================+=========================================#
+'''
+'''
 def select_cols(df, keep_cols):
     if not keep_cols:
         return df
@@ -133,6 +156,9 @@ def select_cols(df, keep_cols):
     return df[cols]
 
 
+#========================================================+=========================================#
+'''
+'''
 def build_qa_nested(row):
     qa_entries = []
     for c in row.index:
@@ -146,6 +172,9 @@ def build_qa_nested(row):
     return qa_entries
 
 
+#========================================================+=========================================#
+'''
+'''
 def main(argv=None):
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -266,6 +295,10 @@ def main(argv=None):
     return 0
 
 
+#========================================================+=========================================#
+'''
+Run Script
+'''
 if __name__ == "__main__":
     # sys.exit(main())
     main()
