@@ -5,8 +5,6 @@
 ### filter_work_orders_to_json.py
 
 ```mermaid
-
-```mermaid
 flowchart TD
     A([Start]) --> B[Parse command line arguments]
     B --> C[Resolve file paths for input output and settings]
@@ -78,7 +76,6 @@ flowchart TD
     AD --> AE
     AE --> AF[Print success message]
     AF --> Z([End])
-
 ```
 
 # score_from_json_auto.py
@@ -132,6 +129,7 @@ flowchart TD
     R --> S["[Print success; Exit 0]"]
 
 ```
+
 
 
 
